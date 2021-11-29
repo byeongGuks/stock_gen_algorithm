@@ -18,16 +18,35 @@ def random_pick_similarity(solutions, children) :
                 randomNum = random.randrange(0, len(solutions))
             replaceCandidate.append(randomNum)
         changeId = 0 # dump
-        maxSimilarity = 0.0
+        minSimilarity = 999999999.0
         for candiID in replaceCandidate :
             candi = solutions[candiID]
             similarity = calc_similarity(candi, child)
-            if similarity > maxSimilarity :
-                maxSimilarity = similarity
+            if similarity < minSimilarity :
+                minSimilarity = similarity
                 changeId = candiID
         solutions[changeId] = child
+
 
 def elitism(solutions, children) :
     solutions = sorted(solutions,key=lambda l:l[13])
     for i in range(len(children)) :
         solutions[i] = children[i]
+
+
+#solution = []
+#for i in range(10) :
+#    sol = []
+#    for j in range(13) :
+#        sol.append(float(i))
+#    solution.append(sol)
+
+#children = []
+#for i in range(13) :
+#    children.append(5.1)
+
+#print(solution)
+#print("------------------")
+#random_pick_similarity(solution, [children])
+
+#print(solution)

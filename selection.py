@@ -12,7 +12,7 @@ def roulette_wheel (costs, k, n) :
     maxCost = max(costs)
     for c in costs :
         #f = (maxCost-c) + (c-minCost)/(k-1)
-        f = c * 5
+        f = (c+50)* 5
         fitness.append(f)
     
     fitnessSubSum = list()

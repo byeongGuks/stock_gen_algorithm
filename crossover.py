@@ -26,7 +26,7 @@ def multi_point (parents) :
     return child
 
 # test code
-gen1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-gen2 = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+#gen1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+#gen2 = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 
-print(multi_point([gen1, gen2]))
+#print(multi_point([gen1, gen2]))

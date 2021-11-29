@@ -12,3 +12,5 @@
 extern "C" GENOPERATION_API void init_data();
 extern "C" GENOPERATION_API void eval_gen(const double* gen_list);
 extern "C" GENOPERATION_API double calcProfitPercent();
+extern "C" GENOPERATION_API int check_log(const double* gen_list);
+extern "C" GENOPERATION_API int check_read();

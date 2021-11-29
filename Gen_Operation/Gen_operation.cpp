@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include "Gen_Operation.h"
 #pragma warning (disable:4996)
+//#define LOG_SIZE 496163
+//#define LOG_SIZE 54799
+#define LOG_SIZE 404946
+//#define LOG_SIZE 146017
 
 typedef struct logInfo {
     char name[6];
@@ -15,13 +19,13 @@ typedef struct logInfo {
 } log_info;
 
 // DLL internal state variables:
-static log_info log_list[496163];
-static double data[496163][13];
+static log_info log_list[LOG_SIZE];
+static double data[LOG_SIZE][13];
 
 void init_data() {
     FILE* fp;
     fp = fopen("data_for_GA.csv", "r");
-    for (int i = 0;i < 496163; i++) {
+    for (int i = 0;i < LOG_SIZE; i++) {
         char a[400];
         fgets(a, sizeof(a), fp);
 
@@ -54,10 +58,10 @@ void init_data() {
 }
 
 void eval_gen(const double* gen_list) {
-    for (int i = 0; i < 496163; i++) {
+    for (int i = 0; i < LOG_SIZE; i++) {
         log_list[i].isReasonable = 1;
         for (int j = 0; j < 13; j++) {
-            if (gen_list[j] < data[i][j]) {
+            if (gen_list[j] > data[i][j]) {
                 log_list[i].isReasonable = 0;
             }
         }
@@ -68,20 +72,20 @@ double calcProfitPercent()
 {
     int i = 0;
     double profitPercentSum = 0.0;
-    int numCompany = 1;
+    int numCompany = 0;
     char * name = log_list[0].name;
-
     int sellPrice=0, buyPrice=0, numBuy=0;
-    for (int i = 0; i < 496163; ++i)
+    for (int i = 0; i < LOG_SIZE; ++i)
     {
         if (strcmp(name, log_list[i].name) != 0) {
-            numCompany += 1;
             if (buyPrice != 0) {
+                numCompany += 1;
                 if (sellPrice == 0) {
                     sellPrice = log_list[i - 1].stockPrice * numBuy;
                 }
-                profitPercentSum += (double)sellPrice / (double)buyPrice;
+                profitPercentSum += double(sellPrice - buyPrice) / double(buyPrice) * 100.0;
             }
+            name = log_list[i].name;
             sellPrice = buyPrice = numBuy = 0;
         }
         if (log_list[i].isReasonable == 1) {
@@ -93,5 +97,22 @@ double calcProfitPercent()
             numBuy = 0;
         }
     }
+    if (numCompany < 80) return 0.0;
+    //if (numCompany == 0) return 0.0;
     return profitPercentSum / numCompany;
+}
+
+int check_log(const double* gen_list) {
+    int numBuy = 0;
+    for (int i = 0; i < LOG_SIZE; ++i) {
+        if (log_list[i].isReasonable == 1) ++numBuy;
+    }
+    return numBuy;
+}
+
+int check_read() {
+    int stockPrice = log_list[0].stockPrice;
+    for (int i = 0; i < LOG_SIZE; ++i) {
+        if (stockPrice != log_list[i].stockPrice) return stockPrice;
+    }
 }

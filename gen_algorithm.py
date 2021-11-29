@@ -33,6 +33,9 @@ calcProfitPercent = lib.calcProfitPercent
 calcProfitPercent.restype = ctypes.c_double
 calcProfitPercent.argtypes = []
 
+eval_gen(numpy.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]))
+print(calcProfitPercent())
+
 #create solutions
 solutions = list()
 for i in range(NUM_SOLUTIONS) :
@@ -51,7 +54,7 @@ while numRepeat < NUM_REPEAT :
      # 현재 해집단의 최적 50개 해의 평균 cost를 저장
     sortedCosts = costs
     sortedCosts.sort(reverse=True)
-    optimalSolutionAverages.append(sum(sortedCosts[0:100]) / 100)
+    optimalSolutionAverages.append(sum(sortedCosts[0:50]) / 50)
     parents = selection.roulette_wheel(costs, 4, NUM_CHILDREN)
     children = []
     for plist in parents :
@@ -62,9 +65,11 @@ while numRepeat < NUM_REPEAT :
         for i in range(len(child)) :
             if random.random() > MUTATION_PERCENT :
                 continue
-            q=5 - numRepeat*0.003  # 표준편차
+            
+            v = (FIELD_MAX_VALUE[i]-FIELD_MIN_VALUE[i] / 2)
+            q= v - numRepeat*0.003*v*0.1  # 표준편차
             u=0 # 평균
-            val = q * numpy.random.randn(1) + u
+            val = q * numpy.random.randn(1)[0] + u
             child[i] += val
             child[i] = max(child[i], FIELD_MIN_VALUE[i])
             child[i] = min(child[i], FIELD_MAX_VALUE[i])
@@ -76,8 +81,8 @@ while numRepeat < NUM_REPEAT :
         child.append(cost)
         children.append(child)     
     # replace gen
-    #replace.random_pick_similarity(solutions, children)
     #replace.elitism(solutions, children)
+   
     solutions = sorted(solutions,key=lambda l:l[13])
     for i in range(len(children)) :
         solutions[i] = children[i]
@@ -86,11 +91,14 @@ while numRepeat < NUM_REPEAT :
     
  # 해집단의 최적 50개 해의 평균 cost의 변화를 그래프로 나타내기
 #print(optimalSolutionAverages[999])
-
-#print(solutions)
-solutions.sort(key=lambda x: (x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9], x[10], x[11], x[12], x[13], -x[0]))
+solutions = sorted(solutions,key=lambda l:l[13], reverse=True)
+best_sols = []
 for i in range(1) :
     print(solutions[i])
+for i in range(50) :
+    best_sols.append(solutions[i])
+(pd.DataFrame(best_sols)).to_csv('best_solutions/small_dataset3.csv')
+(pd.DataFrame(solutions)).to_csv('best_solutions/small_datasetFull3.csv')
 
 plt.plot(optimalSolutionAverages)
 plt.show()
