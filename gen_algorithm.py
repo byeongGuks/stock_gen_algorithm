@@ -33,9 +33,6 @@ calcProfitPercent = lib.calcProfitPercent
 calcProfitPercent.restype = ctypes.c_double
 calcProfitPercent.argtypes = []
 
-eval_gen(numpy.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]))
-print(calcProfitPercent())
-
 #create solutions
 solutions = list()
 for i in range(NUM_SOLUTIONS) :
@@ -45,12 +42,13 @@ for i in range(NUM_SOLUTIONS) :
     sol.append(cost)
     solutions.append(sol)
 
+
 numRepeat = 0
 optimalSolutionAverages = []
 while numRepeat < NUM_REPEAT :
     costs = []
     for sol in solutions :
-        costs.append(sol[len(sol)-1])
+        costs.append(sol[GEN_SIZE])
      # 현재 해집단의 최적 50개 해의 평균 cost를 저장
     sortedCosts = costs
     sortedCosts.sort(reverse=True)
@@ -62,7 +60,7 @@ while numRepeat < NUM_REPEAT :
         parent2 = solutions[plist[1]]
         child = crossover.multi_point([parent1, parent2])        
         # 변이 연산
-        for i in range(len(child)) :
+        for i in range(GEN_SIZE) :
             if random.random() > MUTATION_PERCENT :
                 continue
             
@@ -83,22 +81,23 @@ while numRepeat < NUM_REPEAT :
     # replace gen
     #replace.elitism(solutions, children)
    
-    solutions = sorted(solutions,key=lambda l:l[13])
+    solutions = sorted(solutions,key=lambda l:l[GEN_SIZE])
     for i in range(len(children)) :
         solutions[i] = children[i]
     numRepeat += 1
-    print(numRepeat)
+    if(numRepeat % 10 == 0) : 
+        print(numRepeat)
     
  # 해집단의 최적 50개 해의 평균 cost의 변화를 그래프로 나타내기
 #print(optimalSolutionAverages[999])
-solutions = sorted(solutions,key=lambda l:l[13], reverse=True)
+solutions = sorted(solutions,key=lambda l:l[GEN_SIZE], reverse=True)
 best_sols = []
 for i in range(1) :
     print(solutions[i])
 for i in range(50) :
     best_sols.append(solutions[i])
-(pd.DataFrame(best_sols)).to_csv('best_solutions/small_dataset3.csv')
-(pd.DataFrame(solutions)).to_csv('best_solutions/small_datasetFull3.csv')
+(pd.DataFrame(best_sols)).to_csv('best_solutions/v3_1000,1000,150.csv')
+(pd.DataFrame(solutions)).to_csv('best_solutions/v3F_1000,1000,150.csv')
 
 plt.plot(optimalSolutionAverages)
 plt.show()

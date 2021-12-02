@@ -60,10 +60,21 @@ void init_data() {
 void eval_gen(const double* gen_list) {
     for (int i = 0; i < LOG_SIZE; i++) {
         log_list[i].isReasonable = 1;
+        double b = gen_list[13];
+        int std = (int)gen_list[14];
+        int cnt = 0;
         for (int j = 0; j < 13; j++) {
-            if (gen_list[j] > data[i][j]) {
-                log_list[i].isReasonable = 0;
+            if (gen_list[j] + b > data[i][j] ) {
+                log_list[i].isReasonable = 2;
             }
+            else if (gen_list[j] > data[i][j]) {
+                log_list[i].isReasonable = 0;
+                ++cnt;
+            }
+        }
+        if (log_list[i].isReasonable != 1) {
+            if (cnt > std) log_list[i].isReasonable = 0;
+            else log_list[i].isReasonable = 2;
         }
     }
 }
@@ -94,11 +105,11 @@ double calcProfitPercent()
         }
         else if (log_list[i].isReasonable == 0) {
             sellPrice += log_list[i].stockPrice * numBuy;
+            if (numBuy!= 0 && sellPrice == 0) return float(i);
             numBuy = 0;
         }
     }
-    if (numCompany < 80) return 0.0;
-    //if (numCompany == 0) return 0.0;
+    if (numCompany < 50) return 0.0;
     return profitPercentSum / numCompany;
 }
 

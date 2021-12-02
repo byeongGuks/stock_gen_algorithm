@@ -47,6 +47,5 @@ def profit_ratio_2d (logs) :
 
 
 # test code
-logs = [[[10000, 1], [15000, 0]], [[10000, 1], [15000, 0]]]
-
-print(profit_ratio_simple(logs))
+#logs = [[[10000, 1], [15000, 0]], [[10000, 1], [15000, 0]]]
+#print(profit_ratio_simple(logs))
