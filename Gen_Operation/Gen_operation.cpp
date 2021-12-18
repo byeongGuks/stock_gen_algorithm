@@ -7,10 +7,10 @@
 #include <stdlib.h>
 #include "Gen_Operation.h"
 #pragma warning (disable:4996)
-//#define LOG_SIZE 496163
-//#define LOG_SIZE 54799
-#define LOG_SIZE 404946
-//#define LOG_SIZE 146017
+
+#define LOG_SIZE 403807
+//#define LOG_SIZE 145699
+//#define LOG_SIZE 22633
 
 typedef struct logInfo {
     char name[6];
@@ -58,6 +58,7 @@ void init_data() {
 }
 
 void eval_gen(const double* gen_list) {
+    
     for (int i = 0; i < LOG_SIZE; i++) {
         log_list[i].isReasonable = 1;
         double b = gen_list[13];
@@ -67,7 +68,7 @@ void eval_gen(const double* gen_list) {
             if (gen_list[j] + b > data[i][j] ) {
                 log_list[i].isReasonable = 2;
             }
-            else if (gen_list[j] > data[i][j]) {
+            if (gen_list[j] > data[i][j]) {
                 log_list[i].isReasonable = 0;
                 ++cnt;
             }
@@ -77,6 +78,7 @@ void eval_gen(const double* gen_list) {
             else log_list[i].isReasonable = 2;
         }
     }
+    
 }
 
 double calcProfitPercent()
@@ -86,30 +88,30 @@ double calcProfitPercent()
     int numCompany = 0;
     char * name = log_list[0].name;
     int sellPrice=0, buyPrice=0, numBuy=0;
+    int cnt = 0, tmp=0;
     for (int i = 0; i < LOG_SIZE; ++i)
     {
         if (strcmp(name, log_list[i].name) != 0) {
             if (buyPrice != 0) {
                 numCompany += 1;
-                if (sellPrice == 0) {
-                    sellPrice = log_list[i - 1].stockPrice * numBuy;
-                }
+                //sellPrice += log_list[i - 1].stockPrice * numBuy;
                 profitPercentSum += double(sellPrice - buyPrice) / double(buyPrice) * 100.0;
             }
             name = log_list[i].name;
             sellPrice = buyPrice = numBuy = 0;
         }
+        if (log_list[i].stockPrice == 0) continue;
         if (log_list[i].isReasonable == 1) {
             numBuy += 1;
             buyPrice += log_list[i].stockPrice;
         }
         else if (log_list[i].isReasonable == 0) {
             sellPrice += log_list[i].stockPrice * numBuy;
-            if (numBuy!= 0 && sellPrice == 0) return float(i);
             numBuy = 0;
         }
     }
-    if (numCompany < 50) return 0.0;
+    if (numCompany < 30) return 0.0;
+    //if (numCompany == 0) return 0.0;
     return profitPercentSum / numCompany;
 }
 

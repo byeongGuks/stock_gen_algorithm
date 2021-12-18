@@ -35,6 +35,8 @@ calcProfitPercent.argtypes = []
 
 #create solutions
 solutions = list()
+#solutions = pd.read_csv('best_solutions/v4F_2000,2000,300-2.csv').to_numpy().tolist()
+#print(solutions[0][GEN_SIZE])
 for i in range(NUM_SOLUTIONS) :
     sol = [ random.uniform(FIELD_MIN_VALUE[i], FIELD_MAX_VALUE[i]) for i in range(GEN_SIZE) ]
     eval_gen(numpy.array(sol, dtype='float'))
@@ -46,6 +48,14 @@ for i in range(NUM_SOLUTIONS) :
 numRepeat = 0
 optimalSolutionAverages = []
 while numRepeat < NUM_REPEAT :
+    
+    #if numRepeat == 1000 :
+        #MUTATION_PERCENT -= 0.05
+        #(pd.DataFrame(sol)).to_csv('best_solutions/v4_2000,1000,300-2.csv')
+    #if numRepeat == 1500 :
+        #MUTATION_PERCENT -= 0.05
+        #(pd.DataFrame(sol)).to_csv('best_solutions/v4_2000,1500,300-2.csv')
+    
     costs = []
     for sol in solutions :
         costs.append(sol[GEN_SIZE])
@@ -53,6 +63,9 @@ while numRepeat < NUM_REPEAT :
     sortedCosts = costs
     sortedCosts.sort(reverse=True)
     optimalSolutionAverages.append(sum(sortedCosts[0:50]) / 50)
+    print(optimalSolutionAverages[numRepeat])
+
+
     parents = selection.roulette_wheel(costs, 4, NUM_CHILDREN)
     children = []
     for plist in parents :
@@ -96,8 +109,8 @@ for i in range(1) :
     print(solutions[i])
 for i in range(50) :
     best_sols.append(solutions[i])
-(pd.DataFrame(best_sols)).to_csv('best_solutions/v3_1000,1000,150.csv')
-(pd.DataFrame(solutions)).to_csv('best_solutions/v3F_1000,1000,150.csv')
+(pd.DataFrame(best_sols)).to_csv('best_solutions/v4_1000,1000,150N.csv')
+(pd.DataFrame(solutions)).to_csv('best_solutions/v4F_1000,1000,150N.csv')
 
 plt.plot(optimalSolutionAverages)
 plt.show()
