@@ -4,7 +4,7 @@ import OpenDartReader
 import time
 from pykrx import stock # https://github.com/sharebook-kr/pykrx
 
-api_key = '4d13cb4a55434c1045400dc6e8e6769200ea5dc2'  
+api_key = ''  
 dart = OpenDartReader(api_key) 
 
 years = [2021] # 조사할 년도
