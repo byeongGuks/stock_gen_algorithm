@@ -5,7 +5,7 @@
 ----
 1. Overall figure for Our Algorithm 
 <p align="center">
-  <img src="https://github.com/byeongGuks/stock_gen_algorithm/assets/79459224/239b0bf8-aa79-4f2d-92b0-9ad4b07262b5">
+  <img src="https://github.com/byeongGuks/stock_gen_algorithm/assets/79459224/239b0bf8-aa79-4f2d-92b0-9ad4b07262b5", width=200, height=100>
 </p>
 
 2. Experiment
